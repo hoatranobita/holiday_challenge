@@ -2,8 +2,8 @@ from dash import dcc
 from dash import html
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
-from apps import general, about
 import dash
+from apps import general, about
 
 FA = "https://use.fontawesome.com/releases/v5.12.1/css/all.css"
 FA2 = "https://use.fontawesome.com/releases/v6.0.0/css/all.css"
@@ -53,7 +53,7 @@ def render_page_content(pathname):
     elif pathname == "/page-6":
         return about.layout
 if __name__ == '__main__':
-    app.run_server(debug=False,port='8053')
+    app.run_server(debug=True,port='8056')
 
 
 
