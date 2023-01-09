@@ -1,8 +1,14 @@
 from dash import dcc
 from dash import html
 import dash_bootstrap_components as dbc
+from dash_bootstrap_templates import ThemeSwitchAIO
 
-layout = html.Div([
+layout = dbc.Container([
+    dbc.Row([
+        dbc.Col([
+            ThemeSwitchAIO(aio_id="theme", themes=[dbc.themes.LUX, dbc.themes.CYBORG])
+        ], xs=6, lg=6, md=6, style={'text-align': 'left'}),
+    ], className='p-2 align-items-center'),
     dbc.Row([
         dbc.Col([
             html.H1('About', style={'textAlign': 'center'})
@@ -10,8 +16,8 @@ layout = html.Div([
     ]),
     dbc.Row([
         dbc.Col([
-            dcc.Markdown('''This dashboard is about Iowa Liquor Sales and it was created with Dash Plotly.
-            This dashboard was created for [Autumn Community App Challenge](https://community.plotly.com/t/autumn-community-app-challenge/66996) that
+            dcc.Markdown('''This dashboard is about Customer Churn Analysis and it was created with Dash Plotly.
+            This dashboard was created for [Holiday Community App-Building Challenge](https://community.plotly.com/t/holiday-community-app-building-challenge/70393) that
             organized by Plotly Community Forum. You can download data to create dashboard [here](https://raw.githubusercontent.com/plotly/datasets/master/liquor_iowa_2021.csv).''')
         ])
     ]),
@@ -24,12 +30,11 @@ layout = html.Div([
     dbc.Row([
         dbc.Col([
             dcc.Markdown('''This dashboard was created with 5 pages.'''),
-            dcc.Markdown('''- [Page 1](https://multiple-page-app.herokuapp.com/) is about general information and charts based on wine category.'''),
-            dcc.Markdown('''- [Page 2](https://multiple-page-app.herokuapp.com/page-2) is about charts based on wine item.'''),
-            dcc.Markdown('''- [Page 3](https://multiple-page-app.herokuapp.com/page-3) is about charts based on store.'''),
-            dcc.Markdown('''- [Page 4](https://multiple-page-app.herokuapp.com/page-4) helps you to find store based on latitude and longitude.'''),
-            dcc.Markdown('''- [Page 5](https://multiple-page-app.herokuapp.com/page-5) helps you to filter and download data table'''),
-            dcc.Markdown('''- [Page 6](https://multiple-page-app.herokuapp.com/page-5) is about us''')
+            dcc.Markdown('''- [Page 1](https://holiday-challenge-plotly.onrender.com/) is about analysis by tenure and charges.'''),
+            dcc.Markdown('''- [Page 2](https://holiday-challenge-plotly.onrender.com/page-2) is about analysis by services.'''),
+            dcc.Markdown('''- [Page 3](https://holiday-challenge-plotly.onrender.com/page-3) is about analysis by contracts.'''),
+            dcc.Markdown('''- [Page 4](https://holiday-challenge-plotly.onrender.com/page-4) helps you to predict churn Yes or No.'''),
+            dcc.Markdown('''- [Page 5](https://holiday-challenge-plotly.onrender.com/page-5) is about me''')
         ])
     ]),
     html.Hr(),
@@ -68,4 +73,4 @@ layout = html.Div([
                                  target="_blank"))
         ], width={"size": 3, 'offset': 0})
     ], justify="center"),
-])
+], fluid=True)

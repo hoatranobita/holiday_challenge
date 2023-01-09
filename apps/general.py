@@ -8,14 +8,10 @@ from dash.exceptions import PreventUpdate
 from dash_bootstrap_templates import ThemeSwitchAIO
 import dash_extensions as de
 from dash import html,callback
-import plotly.graph_objects as go
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/telco-customer-churn-by-IBM.csv')
-
-df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
-df['SeniorCitizen'] = df['SeniorCitizen'].astype(str)
+from data import df
 
 template_theme1 = "lux"
-template_theme2 = "slate"
+template_theme2 = "cyborg"
 
 options = dict(loop=True, autoplay=True)
 
@@ -42,7 +38,7 @@ layout = dbc.Container([
                 size="sm"
             )
         ], xs=6, lg=6, md=6, style={'text-align': 'right'})
-    ], className='p-2 align-items-center'),
+    ], className='p-2 align-items-center sticky-top'),
     dbc.Row([
         dbc.Col([
             dbc.Card([
@@ -110,8 +106,8 @@ layout = dbc.Container([
             html.H6('1. Customer Classification', style={'text-align': 'left'}),
             dbc.Card([
                 dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_1', style={'height': 280})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
+                    dbc.Spinner(children=[dcc.Graph(figure={}, id='figure_1', style={'height': 280})],
+                                color='dark')
                 ])
             ]),
             html.Div(id='customer_ratio', style={'text-align': 'left', 'height': 100})
@@ -120,8 +116,8 @@ layout = dbc.Container([
             html.H6('2. Churn Ratio', style={'text-align': 'left'}),
             dbc.Card([
                 dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_2', style={'height': 280})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
+                    dbc.Spinner(children=[dcc.Graph(figure={}, id='figure_2', style={'height': 280})],
+                                color='dark')
                 ])
             ]),
             html.Div(id='churn_ratio', style={'text-align': 'left', 'height': 100})
@@ -130,8 +126,8 @@ layout = dbc.Container([
             html.H6('3.1 Tenure histogram', style={'text-align': 'left'}),
             dbc.Card([
                 dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_3', style={'height': 280})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
+                    dbc.Spinner(children=[dcc.Graph(figure={}, id='figure_3', style={'height': 280})],
+                                color='dark')
                 ])
             ]),
             html.Div(id='tenure_ratio_1', style={'text-align': 'left', 'height': 100})
@@ -140,8 +136,8 @@ layout = dbc.Container([
             html.H6('3.2 Tenure box', style={'text-align': 'left'}),
             dbc.Card([
                 dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_4', style={'height': 280})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
+                    dbc.Spinner(children=[dcc.Graph(figure={}, id='figure_4', style={'height': 280})],
+                                color='dark')
                 ])
             ]),
             html.Div(id='tenure_ratio_2', style={'text-align': 'left', 'height': 100})
@@ -152,8 +148,8 @@ layout = dbc.Container([
             html.H6('4.1. Monthly Charge', style={'text-align': 'left'}),
             dbc.Card([
                 dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_5', style={'height': 280})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
+                    dbc.Spinner(children=[dcc.Graph(figure={}, id='figure_5', style={'height': 280})],
+                                color='dark')
                 ])
             ]),
             html.Div(id='monthly_ratio_1', style={'text-align': 'left', 'height': 100})
@@ -162,8 +158,8 @@ layout = dbc.Container([
             html.H6('4.2. Monthly Charge Box', style={'text-align': 'left'}),
             dbc.Card([
                 dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_6', style={'height': 280})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
+                    dbc.Spinner(children=[dcc.Graph(figure={}, id='figure_6', style={'height': 280})],
+                                color='dark')
                 ])
             ]),
             html.Div(id='monthly_ratio_2', style={'text-align': 'left', 'height': 100})
@@ -172,8 +168,8 @@ layout = dbc.Container([
             html.H6('5.1 Total Charges', style={'text-align': 'left'}),
             dbc.Card([
                 dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_7', style={'height': 280})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
+                    dbc.Spinner(children=[dcc.Graph(figure={}, id='figure_7', style={'height': 280})],
+                                color='dark')
                 ])
             ]),
             html.Div(id='total_ratio_1', style={'text-align': 'left', 'height': 100})
@@ -182,193 +178,14 @@ layout = dbc.Container([
             html.H6('5.2 Total Charges Box', style={'text-align': 'left'}),
             dbc.Card([
                 dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_8', style={'height': 280})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
+                    dbc.Spinner(children=[dcc.Graph(figure={}, id='figure_8', style={'height': 280})],
+                                color='dark')
                 ])
             ]),
             html.Div(id='total_ratio_2', style={'text-align': 'left', 'height': 100})
         ], xs=12, lg=3, md=6)
-    ], className='p-2 align-items-center'),
-    dbc.Row([
-        dbc.Col([
-            html.H5('II. Analysis by services', style={'text-align': 'left', 'padding-top': 15})
-        ])
-    ], className='p-2 align-items-center'),
-    dbc.Row([
-        dbc.Col([
-            html.H6('1.1 Internet Service Situation', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_9', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('1.2 Churn by Internet Service Type', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_10', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('2.1 Multiple Lines Situation', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_11', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('2.2 Churn by Multiple Lines Type', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_12', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6)
-
-    ], className='p-2 align-items-center'),
-    dbc.Row([
-        dbc.Col([
-            html.H6('3.1 Phone Service Situation', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_13', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('3.2 Churn by Phone Service', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_14', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('4.1 Online Security Situation', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_15', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('4.2 Churn by Online Security', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_16', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-    ], className='p-2 align-items-center'),
-    dbc.Row([
-        dbc.Col([
-            html.H6('5.1 OnlineBackup Situation', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_17', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('5.2 Churn by OnlineBackup', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_18', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('6.1 DeviceProtection Situation', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_19', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('6.2 Churn by DeviceProtection', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_20', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-    ], className='p-2 align-items-center'),
-    dbc.Row([
-        dbc.Col([
-            html.H6('7.1 TechSupport Situation', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_21', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('7.2 Churn by TechSupport', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_22', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('8.1 StreamingTV Situation', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_23', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('8.2 Churn by StreamingTV', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_24', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-    ], className='p-2 align-items-center'),
-    dbc.Row([
-        dbc.Col([
-            html.H6('9.1 StreamingMovies Situation', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_25', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
-        dbc.Col([
-            html.H6('9.2 Churn by StreamingMovies', style={'text-align': 'left'}),
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Loading(children=[dcc.Graph(figure={}, id='figure_26', style={'height': 350})],
-                                color='rgba(50, 171, 96, 0.6)', type='dot')
-                ])
-            ])
-        ], xs=12, lg=3, md=6),
     ], className='p-2 align-items-center')
 ], fluid=True)
-
 
 @callback([Output('card_title_1', 'children'),
                Output('customer_indicator', 'children'),
@@ -396,30 +213,13 @@ layout = dbc.Container([
            Output("figure_5", "figure"),
                Output("figure_6", "figure"),
                Output("figure_7", "figure"),
-               Output("figure_8", "figure"),
-               Output("figure_9", "figure"),
-               Output("figure_10", "figure"),
-               Output("figure_11", "figure"),
-               Output("figure_12", "figure"),
-               Output("figure_13", "figure"),
-               Output("figure_14", "figure"),
-               Output("figure_15", "figure"),
-               Output("figure_16", "figure"),
-               Output("figure_17", "figure"),
-               Output("figure_18", "figure"),
-               Output("figure_19", "figure"),
-               Output("figure_20", "figure"),
-               Output("figure_21", "figure"),
-               Output("figure_22", "figure"),
-               Output("figure_23", "figure"),
-               Output("figure_24", "figure"),
-               Output("figure_25", "figure"),
-               Output("figure_26", "figure")],
+               Output("figure_8", "figure")],
               [Input("radioitems-input", "value"),
                Input(ThemeSwitchAIO.ids.switch("theme"), "value")])
 def update_graph(radio, theme):
     template = template_theme1 if theme else template_theme2
     if radio:
+        # Data for fig_1, fig_2
         df2 = df.groupby(radio)[radio].count().reset_index(name='counts')
         df2['Percentage'] = (df2['counts'] / df2['counts'].sum() * 100).round(decimals=2)
         fig = px.pie(values=df2['counts'], names=df2[radio], hole=0.7,
@@ -485,6 +285,7 @@ def update_graph(radio, theme):
         ratio_5 = df3['Percentage'].iloc[2]
         ratio_6 = df3['Percentage'].iloc[3]
 
+        # Data for fig_3, fig_4
         df4 = df.groupby(['tenure', radio])[radio].count().reset_index(name='counts')
         df4.loc[df4['tenure'].between(0, 10), 'tenure_group'] = '0-10'
         df4.loc[df4['tenure'].between(11, 20), 'tenure_group'] = '11-20'
@@ -527,7 +328,7 @@ def update_graph(radio, theme):
         fig_4.update_yaxes(showline=False, showgrid=False, exponentformat="none")
         fig_4.update_xaxes(showline=False, showgrid=False, exponentformat="none")
 
-        # Monthly Charges Chart
+        # Data for fig_5, fig_6
         df5 = pd.pivot_table(df, ('MonthlyCharges'), index=[radio], aggfunc=np.sum).reset_index()
         customer_type_11 = df5[radio].iloc[0]
         customer_type_12 = df5[radio].iloc[1]
@@ -564,7 +365,8 @@ def update_graph(radio, theme):
         ))
         fig_6.update_yaxes(showline=False, showgrid=False, exponentformat="none")
         fig_6.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        # Total Charges Chart
+
+        # Data for fig_7, fig_8
         df6 = pd.pivot_table(df, ('TotalCharges'), index=[radio], aggfunc=np.sum).reset_index()
         customer_type_15 = df6[radio].iloc[0]
         customer_type_16 = df6[radio].iloc[1]
@@ -572,7 +374,6 @@ def update_graph(radio, theme):
         total_charge_2 = df6['TotalCharges'].iloc[1]
         total_charge_1 = f'{total_charge_1:,.2f}'
         total_charge_2 = f'{total_charge_2:,.2f}'
-
         df6_2 = df.groupby([radio, 'Churn'])['TotalCharges'].agg('median').reset_index()
         customer_type_17 = df6_2[radio].iloc[1]
         customer_type_18 = df6_2[radio].iloc[3]
@@ -611,328 +412,6 @@ def update_graph(radio, theme):
         count_7 = f'{count_7:,.0f}'
         count_8 = f'{count_8:,.0f}'
 
-        df7 = df.groupby(['InternetService', radio])[radio].count().reset_index(name='counts')
-        fig_9 = px.bar(df7, x=radio, y='counts', color='InternetService',
-                       color_discrete_sequence=px.colors.qualitative.Safe, text='counts', barmode='group')
-        fig_9.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_9.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_9.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_9.update_traces(width=0.25, texttemplate='%{text:,.0f}', textposition='inside')
-
-        df8 = df.groupby(['InternetService', radio, 'Churn'])[radio].count().reset_index(name='counts')
-        z = df8[radio].unique()
-        z1 = z[0]
-        z2 = z[1]
-        df8_1 = df8[df8[radio] == z1]
-        df8_2 = df8[df8[radio] == z2]
-        z3 = radio + ' ' + z1
-        z4 = radio + ' ' + z2
-        fig_10 = go.Figure()
-        fig_10.add_trace(go.Bar(name=z3, x=[tuple(df8_1['Churn']), tuple(df8_1['InternetService'])],
-                               y=list(df8_1['counts'])),
-                        )
-        fig_10.add_trace(go.Bar(name=z4,x=[tuple(df8_2['Churn']), tuple(df8_2['InternetService'])],
-                               y=list(df8_2['counts'])),
-                        )
-        fig_10.update_layout(barmode='stack')
-        fig_10.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_10.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_10.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-
-        df9 = df.groupby(['MultipleLines', radio])[radio].count().reset_index(name='counts')
-        fig_11 = px.bar(df9, x=radio, y='counts', color='MultipleLines',
-                       color_discrete_sequence=px.colors.qualitative.Safe, text='counts', barmode='group')
-        fig_11.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_11.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_11.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_11.update_traces(width=0.25, texttemplate='%{text:,.0f}', textposition='inside')
-
-        df10 = df.groupby(['MultipleLines', radio, 'Churn'])[radio].count().reset_index(name='counts')
-        df10_1 = df10[df10[radio] == z1]
-        df10_2 = df10[df10[radio] == z2]
-
-        fig_12 = go.Figure()
-        fig_12.add_trace(go.Bar(name=z3,x=[tuple(df10_1['Churn']), tuple(df10_1['MultipleLines'])],
-                               y=list(df10_1['counts'])),
-                        )
-        fig_12.add_trace(go.Bar(name=z4,x=[tuple(df10_2['Churn']), tuple(df10_2['MultipleLines'])],
-                               y=list(df10_2['counts'])),
-                        )
-        fig_12.update_layout(barmode='stack')
-        fig_12.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_12.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_12.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-
-        df11 = df.groupby(['PhoneService', radio])[radio].count().reset_index(name='counts')
-        fig_13 = px.bar(df11, x=radio, y='counts', color='PhoneService',
-                       color_discrete_sequence=px.colors.qualitative.Safe, text='counts', barmode='group')
-        fig_13.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_13.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_13.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_13.update_traces(width=0.25, texttemplate='%{text:,.0f}', textposition='inside')
-        df12 = df.groupby(['PhoneService', radio, 'Churn'])[radio].count().reset_index(name='counts')
-        df12_1 = df12[df12[radio] == z1]
-        df12_2 = df12[df12[radio] == z2]
-
-        fig_14 = go.Figure()
-        fig_14.add_trace(go.Bar(name=z3,x=[tuple(df12_1['Churn']), tuple(df12_1['PhoneService'])],
-                               y=list(df12_1['counts'])),
-                        )
-        fig_14.add_trace(go.Bar(name=z4,x=[tuple(df12_2['Churn']), tuple(df12_2['PhoneService'])],
-                               y=list(df12_2['counts'])),
-                        )
-        fig_14.update_layout(barmode='stack')
-        fig_14.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_14.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_14.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-
-        df13 = df.groupby(['OnlineSecurity', radio])[radio].count().reset_index(name='counts')
-        fig_15 = px.bar(df13, x=radio, y='counts', color='OnlineSecurity',
-                       color_discrete_sequence=px.colors.qualitative.Safe, text='counts', barmode='group')
-        fig_15.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_15.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_15.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_15.update_traces(width=0.25, texttemplate='%{text:,.0f}', textposition='inside')
-        df14 = df.groupby(['OnlineSecurity', radio, 'Churn'])[radio].count().reset_index(name='counts')
-        df14_1 = df14[df14[radio] == z1]
-        df14_2 = df14[df14[radio] == z2]
-
-        fig_16 = go.Figure()
-        fig_16.add_trace(go.Bar(name=z3,x=[tuple(df14_1['Churn']), tuple(df14_1['OnlineSecurity'])],
-                               y=list(df14_1['counts'])),
-                        )
-        fig_16.add_trace(go.Bar(name=z4,x=[tuple(df14_2['Churn']), tuple(df14_2['OnlineSecurity'])],
-                               y=list(df14_2['counts'])),
-                        )
-        fig_16.update_layout(barmode='stack')
-        fig_16.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_16.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_16.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-
-        df15 = df.groupby(['OnlineBackup', radio])[radio].count().reset_index(name='counts')
-        fig_17 = px.bar(df15, x=radio, y='counts', color='OnlineBackup',
-                       color_discrete_sequence=px.colors.qualitative.Safe, text='counts', barmode='group')
-        fig_17.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_17.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_17.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_17.update_traces(width=0.25, texttemplate='%{text:,.0f}', textposition='inside')
-        df16 = df.groupby(['OnlineBackup', radio, 'Churn'])[radio].count().reset_index(name='counts')
-        df16_1 = df16[df16[radio] == z1]
-        df16_2 = df16[df16[radio] == z2]
-
-        fig_18 = go.Figure()
-        fig_18.add_trace(go.Bar(name=z3,x=[tuple(df16_1['Churn']), tuple(df16_1['OnlineBackup'])],
-                               y=list(df16_1['counts'])),
-                        )
-        fig_18.add_trace(go.Bar(name=z4,x=[tuple(df16_2['Churn']), tuple(df16_2['OnlineBackup'])],
-                               y=list(df16_2['counts'])),
-                        )
-        fig_18.update_layout(barmode='stack')
-        fig_18.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_18.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_18.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-
-
-        df17 = df.groupby(['DeviceProtection', radio])[radio].count().reset_index(name='counts')
-        fig_19 = px.bar(df17, x=radio, y='counts', color='DeviceProtection',
-                       color_discrete_sequence=px.colors.qualitative.Safe, text='counts', barmode='group')
-        fig_19.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_19.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_19.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_19.update_traces(width=0.25, texttemplate='%{text:,.0f}', textposition='inside')
-        df18 = df.groupby(['DeviceProtection', radio, 'Churn'])[radio].count().reset_index(name='counts')
-        df18_1 = df18[df18[radio] == z1]
-        df18_2 = df18[df18[radio] == z2]
-
-        fig_20 = go.Figure()
-        fig_20.add_trace(go.Bar(name=z3,x=[tuple(df18_1['Churn']), tuple(df18_1['DeviceProtection'])],
-                               y=list(df18_1['counts'])),
-                        )
-        fig_20.add_trace(go.Bar(name=z4,x=[tuple(df18_2['Churn']), tuple(df18_2['DeviceProtection'])],
-                               y=list(df18_2['counts'])),
-                        )
-        fig_20.update_layout(barmode='stack')
-        fig_20.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_20.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_20.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-
-
-        df19 = df.groupby(['TechSupport', radio])[radio].count().reset_index(name='counts')
-        fig_21 = px.bar(df19, x=radio, y='counts', color='TechSupport',
-                       color_discrete_sequence=px.colors.qualitative.Safe, text='counts', barmode='group')
-        fig_21.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_21.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_21.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_21.update_traces(width=0.25, texttemplate='%{text:,.0f}', textposition='inside')
-        df20 = df.groupby(['TechSupport', radio, 'Churn'])[radio].count().reset_index(name='counts')
-        df20_1 = df20[df20[radio] == z1]
-        df20_2 = df20[df20[radio] == z2]
-
-        fig_22 = go.Figure()
-        fig_22.add_trace(go.Bar(name=z3,x=[tuple(df20_1['Churn']), tuple(df20_1['TechSupport'])],
-                               y=list(df20_1['counts'])),
-                        )
-        fig_22.add_trace(go.Bar(name=z4,x=[tuple(df20_2['Churn']), tuple(df20_2['TechSupport'])],
-                               y=list(df20_2['counts'])),
-                        )
-        fig_22.update_layout(barmode='stack')
-        fig_22.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_22.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_22.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-
-        df21 = df.groupby(['StreamingTV', radio])[radio].count().reset_index(name='counts')
-        fig_23 = px.bar(df21, x=radio, y='counts', color='StreamingTV',
-                       color_discrete_sequence=px.colors.qualitative.Safe, text='counts', barmode='group')
-        fig_23.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_23.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_23.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_23.update_traces(width=0.25, texttemplate='%{text:,.0f}', textposition='inside')
-        df22 = df.groupby(['StreamingTV', radio, 'Churn'])[radio].count().reset_index(name='counts')
-        df22_1 = df22[df22[radio] == z1]
-        df22_2 = df22[df22[radio] == z2]
-
-        fig_24 = go.Figure()
-        fig_24.add_trace(go.Bar(name=z3,x=[tuple(df22_1['Churn']), tuple(df22_1['StreamingTV'])],
-                               y=list(df22_1['counts'])),
-                        )
-        fig_24.add_trace(go.Bar(name=z4,x=[tuple(df22_2['Churn']), tuple(df22_2['StreamingTV'])],
-                               y=list(df22_2['counts'])),
-                        )
-        fig_24.update_layout(barmode='stack')
-        fig_24.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_24.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_24.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-
-        df23 = df.groupby(['StreamingMovies', radio])[radio].count().reset_index(name='counts')
-        fig_25 = px.bar(df23, x=radio, y='counts', color='StreamingMovies',
-                       color_discrete_sequence=px.colors.qualitative.Safe, text='counts', barmode='group')
-        fig_25.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_25.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_25.update_xaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_25.update_traces(width=0.25, texttemplate='%{text:,.0f}', textposition='inside')
-        df24 = df.groupby(['StreamingMovies', radio, 'Churn'])[radio].count().reset_index(name='counts')
-        df24_1 = df24[df24[radio] == z1]
-        df24_2 = df24[df24[radio] == z2]
-
-        fig_26 = go.Figure()
-        fig_26.add_trace(go.Bar(name=z3,x=[tuple(df24_1['Churn']), tuple(df24_1['StreamingMovies'])],
-                               y=list(df24_1['counts'])),
-                        )
-        fig_26.add_trace(go.Bar(name=z4,x=[tuple(df24_2['Churn']), tuple(df24_2['StreamingMovies'])],
-                               y=list(df24_2['counts'])),
-                        )
-        fig_26.update_layout(barmode='stack')
-        fig_26.update_layout(template=template, legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ))
-        fig_26.update_yaxes(showline=False, showgrid=False, exponentformat="none")
-        fig_26.update_xaxes(showline=False, showgrid=False, exponentformat="none")
 
 
         return html.H6(f'Customer amount by {radio}', style={'color': '#7172ba'}), \
@@ -969,8 +448,7 @@ def update_graph(radio, theme):
                html.Div([html.Span(f'{radio} {customer_type_17} churn Yes median total charge is $ {median_5}'), \
                          html.Span(f'{radio} {customer_type_18} churn Yes median total charge is $ {median_6}')],
                         className="d-grid"),\
-               fig, fig_2, fig_3, fig_4, fig_5, fig_6, fig_7, fig_8, fig_9, fig_10, fig_11, fig_12, fig_13, \
-               fig_14, fig_15, fig_16, fig_17, fig_18, fig_19, fig_20, fig_21, fig_22, fig_23, fig_24, fig_25, fig_26
+               fig, fig_2, fig_3, fig_4, fig_5, fig_6, fig_7, fig_8
 
     else:
         raise PreventUpdate
