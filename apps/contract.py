@@ -34,7 +34,7 @@ layout = dbc.Container([
                 size="sm"
             )
         ], xs=6, lg=6, md=6, style={'text-align': 'right'})
-    ], className='p-2 align-items-center sticky-top'),
+    ], className='p-2 align-items-center'), # sticky-top
     dbc.Row([
         dbc.Col([
             html.H5('III. Analysis by contracts', style={'text-align': 'left', 'padding-top': 15})
